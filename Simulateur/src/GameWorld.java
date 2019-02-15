@@ -7,6 +7,7 @@ import java.util.List;
  *
  */
 public class GameWorld {
+	private char dernièreTouche;
 
 	private static List<Entite> entites;
 
@@ -25,25 +26,25 @@ public class GameWorld {
 	 */
 	public void processUserInput(char key) {
 		switch (key) {
-		case 't':
+		case 'm':
+			dernièreTouche='m';
 			// TODO
 			break;
 		case 'p':
+			dernièreTouche='p';
 			// TODO
 			break;
-		case 'n':
+		case 'c':
+			dernièreTouche='c';
 			// TODO
 			break;
-		case 'd':
+		case 'i':
+			dernièreTouche='i';
 			// TODO
 			break;
-		case 'z':
+		case 's':
+			dernièreTouche='s';
 			// TODO
-			break;
-		case 'a':
-			// TODO
-			break;
-
 		default:
 			break;
 		}
