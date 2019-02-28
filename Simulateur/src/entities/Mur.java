@@ -1,3 +1,5 @@
+package entities;
+import Base.StdDraw;
 
 public class Mur extends Decor{
 
@@ -16,5 +18,5 @@ public class Mur extends Decor{
 	public boolean franchissable() {
 		return false;
 	}
-
+ 
 }

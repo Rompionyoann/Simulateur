@@ -1,4 +1,5 @@
-
+package entities;
+import Base.Entite;
 public abstract class Decor extends Entite {
 	
 	public Decor(double x, double y) {
@@ -8,9 +9,8 @@ public abstract class Decor extends Entite {
 	
 	public abstract boolean franchissable();
 	
-	@Override
-	public void step() {
-		}
+	public  void step() {
+			}
 
 	@Override
 	public abstract void dessine();
