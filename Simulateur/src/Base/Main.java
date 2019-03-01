@@ -8,14 +8,12 @@ public class Main {
 		StdDraw.setCanvasSize(1000, 600);
 
 		GameWorld world = new GameWorld();
-		
 
 		// permet le double buffering, pour type filter textpermettre l'animation
 		StdDraw.enableDoubleBuffering();
 
-		boolean val = false;
 		// la boucle principale de notre jeu
-		while (val) {
+		while (world.isGameIsOk()) {
 			// Efface la fenetre graphique
 			StdDraw.clear();
 
@@ -29,13 +27,12 @@ public class Main {
 				world.processMouseClick(StdDraw.mouseX(), StdDraw.mouseY());
 			}
 
-			
 			world.step();
 
 			// dessine la carte
 			world.dessine();
 
-			// Montre la fenetre graphique mise a jour et attends 20 millisecondes
+			// Montre la  graphique mise a jour et attends 20 millisecondes
 			StdDraw.show();
 			StdDraw.pause(20);
 

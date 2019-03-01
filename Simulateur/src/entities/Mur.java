@@ -1,22 +1,30 @@
 package entities;
+
 import Base.StdDraw;
 
-public class Mur extends Decor{
+public class Mur extends Decor {
+	private double largeur;
+	private double longueur;
 
-	public Mur(double x, double y) {
+	public Mur(double x, double y, double largeur, double longueur) {
 		super(x, y);
-		// TODO Auto-generated constructor stub
+		this.largeur = largeur;
+		this.longueur = longueur;
 	}
 
 	@Override
 	public void dessine() {
 		StdDraw.setPenColor(StdDraw.BLACK);
-		StdDraw.rectangle(this.getX(), this.getY(), 1, 2);
+		StdDraw.filledRectangle(this.getX(), this.getY(), largeur, longueur);
 	}
 
 	@Override
 	public boolean franchissable() {
 		return false;
 	}
- 
+
+	@Override
+	public void step() {
+	}
+
 }

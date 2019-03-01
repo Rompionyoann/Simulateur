@@ -1,6 +1,4 @@
 package entities;
-import java.awt.List;
-
 import Base.Entite;
 
 public abstract class Personne extends Entite {

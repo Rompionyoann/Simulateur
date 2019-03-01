@@ -1,14 +1,20 @@
 package Base;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import entities.Mur;
+import entities.Sortie;
+
 /**
  * The class GameWorld that handle the flow of the game
+ * 
  * @author hugom
  *
  */
 public class GameWorld {
-	private char dernièreTouche;
+	private char derniereTouche;
+	private boolean gameIsOk = true;
 
 	private static List<Entite> entites;
 
@@ -19,7 +25,6 @@ public class GameWorld {
 		entites = new LinkedList<Entite>();
 	}
 
-
 	/**
 	 * Gestion des interactions clavier avec l'utilisateur
 	 * 
@@ -28,23 +33,24 @@ public class GameWorld {
 	public void processUserInput(char key) {
 		switch (key) {
 		case 'm':
-			dernièreTouche='m';
+			System.out.println("un mur veut etre place");
+			derniereTouche = 'm';
 			// TODO
 			break;
 		case 'p':
-			dernièreTouche='p';
+			derniereTouche = 'p';
 			// TODO
 			break;
 		case 'c':
-			dernièreTouche='c';
+			derniereTouche = 'c';
 			// TODO
 			break;
 		case 'i':
-			dernièreTouche='i';
+			derniereTouche = 'i';
 			// TODO
 			break;
 		case 's':
-			dernièreTouche='s';
+			derniereTouche = 's';
 			// TODO
 		default:
 			break;
@@ -59,22 +65,48 @@ public class GameWorld {
 	 * @param y position en y de la souris au moment du clic
 	 */
 	public void processMouseClick(double x, double y) {
+		switch (derniereTouche) {
+		case 'm':
+			entites.add(new Mur(x, y, 0.01, 0.05));
+			System.out.println(entites);
+			derniereTouche = '?';
+			break;
 		}
-		
+	}
+
 	/**
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
 		for (Entite entite : GameWorld.entites)
 			entite.step();
-		}
+	}
 
 	/**
 	 * Draw all entities and elements of the game
 	 */
+	public void Batiment1() {
+		entites.add(new Mur(0.005, 0.5, 0.01, 1));
+		entites.add(new Mur(0.995, 0.5, 0.01, 1));
+		entites.add(new Mur(0.5, 0.005, 1, 0.01));
+		entites.add(new Mur(0.225, 0.995, 0.45, 0.01));
+		entites.add(new Mur(0.825, 0.995, 0.45, 0.01));
+		entites.add(new Sortie(0.5, 0.995,0.1,0.01));
+	}
+
 	public void dessine() {
+		Batiment1();
 		// affiche les entites
-		for (Entite entite : entites)
+		for (Entite entite : entites) {
 			entite.dessine();
+		}
+	}
+
+	public boolean isGameIsOk() {
+		return gameIsOk;
+	}
+
+	public void setGameIsOk(boolean gameIsOk) {
+		this.gameIsOk = gameIsOk;
 	}
 }

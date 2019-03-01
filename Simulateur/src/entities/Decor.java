@@ -9,8 +9,7 @@ public abstract class Decor extends Entite {
 	
 	public abstract boolean franchissable();
 	
-	public  void step() {
-			}
+	public abstract void step();
 
 	@Override
 	public abstract void dessine();

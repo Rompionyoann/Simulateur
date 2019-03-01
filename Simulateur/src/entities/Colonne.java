@@ -15,4 +15,8 @@ public class Colonne extends Decor {
 	public void dessine() {
 	}
 
+	@Override
+	public void step() {
+	}
+
 }
