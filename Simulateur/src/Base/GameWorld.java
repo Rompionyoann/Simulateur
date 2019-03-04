@@ -6,6 +6,7 @@ import java.util.List;
 
 import entities.Colonne;
 import entities.Mur;
+import entities.Personne;
 import entities.Sortie;
 
 /**
@@ -26,6 +27,23 @@ public class GameWorld {
 			this.x = x;
 			this.y = y;
 		}
+
+		public double getX() {
+			return x;
+		}
+
+		public void setX(double x) {
+			this.x = x;
+		}
+
+		public double getY() {
+			return y;
+		}
+
+		public void setY(double y) {
+			this.y = y;
+		}
+		
 	}
 
 	private List<pos> lSortie = new LinkedList<pos>();
@@ -116,9 +134,20 @@ public class GameWorld {
 //		}
 //	}
 
-	public void trouveSortie(){
+	public void trouveSortie() {
 		for (Entite entite : entites) {
-			if (entite instanceof Sortie) lSortie.add(new pos(entite.getX(),entite.getY()));
+			if (entite instanceof Sortie)
+				lSortie.add(new pos(entite.getX(), entite.getY()));
+		}
+	}
+
+	public void trouveSortieLaPlusProche(Personne p) {
+		double x = p.getX();
+		double y = p.getY();
+		double d;
+		for (pos s : lSortie) {
+			double newD = Math.Sqrt(Math.pow(Math.abs(x-s.getX()),2)+Math.pow(Math.abs(y-s.getY())));
+			if(d==null||newD<d) d
 		}
 	}
 
