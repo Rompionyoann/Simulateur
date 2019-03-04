@@ -3,6 +3,8 @@ package Base;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import entities.Colonne;
 import entities.Mur;
 import entities.Sortie;
 
@@ -16,6 +18,18 @@ public class GameWorld {
 	private char derniereTouche;
 	private boolean gameIsOk = true;
 
+	private class pos {
+		double x;
+		double y;
+
+		public pos(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	private List<pos> lSortie = new LinkedList<pos>();
+
 	private static List<Entite> entites;
 
 	/**
@@ -23,6 +37,7 @@ public class GameWorld {
 	 */
 	public GameWorld() {
 		entites = new LinkedList<Entite>();
+		lSortie = new LinkedList<pos>();
 	}
 
 	/**
@@ -91,7 +106,20 @@ public class GameWorld {
 		entites.add(new Mur(0.5, 0.005, 1, 0.01));
 		entites.add(new Mur(0.225, 0.995, 0.45, 0.01));
 		entites.add(new Mur(0.825, 0.995, 0.45, 0.01));
-		entites.add(new Sortie(0.5, 0.995,0.1,0.01));
+		entites.add(new Sortie(0.5, 0.995, 0.1, 0.01));
+		entites.add(new Colonne(0.5, 0.8));
+	}
+
+//	public void AjoutePersonne(int n) {
+//		for (int i=0; i<n; i++) {
+//			entite.add(Personne())
+//		}
+//	}
+
+	public void trouveSortie(){
+		for (Entite entite : entites) {
+			if (entite instanceof Sortie) lSortie.add(new pos(entite.getX(),entite.getY()));
+		}
 	}
 
 	public void dessine() {

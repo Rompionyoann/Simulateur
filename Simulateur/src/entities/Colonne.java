@@ -1,5 +1,6 @@
 package entities;
 import Base.Entite;
+import Base.StdDraw;
 public class Colonne extends Decor {
 
 	public Colonne(double x, double y) {
@@ -13,6 +14,8 @@ public class Colonne extends Decor {
 
 	@Override
 	public void dessine() {
+		StdDraw.setPenColor(StdDraw.BLACK);
+		StdDraw.filledCircle(this.getX(), this.getY(), 0.1);
 	}
 
 	@Override

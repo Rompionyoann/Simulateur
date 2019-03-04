@@ -5,7 +5,7 @@ public class Main {
 	public static void main(String[] args) {
 		// reglage de la taille de la fenetre de jeu, en pixels (nb: un écran fullHD =
 		// 1980x1050 pixels)
-		StdDraw.setCanvasSize(1000, 600);
+		StdDraw.setCanvasSize(600, 600);
 
 		GameWorld world = new GameWorld();
 
