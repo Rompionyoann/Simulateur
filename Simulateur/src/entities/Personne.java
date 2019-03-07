@@ -1,20 +1,17 @@
 package entities;
-import Base.Entite;
 
-public abstract class Personne extends Entite {
-	
-	private double vitesse;
-	private double[] vecteurVit= new double[2];
+import Base.Entite;
+import Base.Position;
+import Base.StdDraw;
+
+public class Personne extends Entite {
+
+	private Position sortieLaPlusProche =new Position(-1,-1);
+	private Position vecteurSortie;
+	private double vitesse = 0.01;
+	private double Norme =0;
 	private double hitRadius;
-	private Personne[] proximité=new Personne[6];
-	
-	Personne(double x , double y, double vitesse, double[] vecteurVit, double hitRadius) {
-		super(x,y);
-		this.vitesse=vitesse;
-		this.vecteurVit= vecteurVit;	
-		this.hitRadius=hitRadius;
-	}
-	
+
 	public double getVitesse() {
 		return vitesse;
 	}
@@ -23,12 +20,17 @@ public abstract class Personne extends Entite {
 		this.vitesse = vitesse;
 	}
 
-	public double[] getVecteurVit() {
-		return vecteurVit;
+	public Position getSortieLaPlusProche() {
+		return sortieLaPlusProche;
 	}
 
-	public void setVecteurVit(double[] vecteurVit) {
-		this.vecteurVit = vecteurVit;
+	public void setSortieLaPlusProche(Position sortieLaPlusProche) {
+		this.sortieLaPlusProche = sortieLaPlusProche;
+	}
+
+	public Personne(double x, double y, double hitRadius) {
+		super(x, y);
+		this.hitRadius = hitRadius;
 	}
 
 	public double getHitRadius() {
@@ -39,12 +41,26 @@ public abstract class Personne extends Entite {
 		this.hitRadius = hitRadius;
 	}
 
-	//TODO Fonction Modifiant les valeurs de X et Y en fonction de l'executions de chaque step 
-	public abstract void step();
-	
-	//TODO Fonction qui représente un individu sur la map
-	public abstract void dessine();
-	
-	//TODO définition de la fonction proximité
-	public abstract Personne[] proxi();
+	// TODO Fonction Modifiant les valeurs de X et Y en fonction de l'executions de
+	// chaque step
+	public void step() {
+		if (Norme==0) {
+			vecteurSortie = new Position((sortieLaPlusProche.getX() - this.getX()),
+					(sortieLaPlusProche.getY() - this.getY()));
+			Norme = Math.sqrt(Math.pow(vecteurSortie.getX(), 2) + Math.pow(vecteurSortie.getY(), 2));
+		}
+		double x =vitesse * (vecteurSortie.getX()/Norme);
+//		System.out.println("mon vecteur sortie en x "+ vecteurSortie.getX());
+//		System.out.println("ma norme est de  " + Norme);
+//		System.out.println("j'avance de " + x);
+		double y = vitesse * (vecteurSortie.getY()/Norme);
+		this.setPosition(new Position(this.getX() + x, this.getY() + y));
+	}
+
+	// TODO Fonction qui représente un individu sur la map
+	public void dessine() {
+		StdDraw.setPenColor(StdDraw.GREEN);
+		StdDraw.filledCircle(this.getX(), this.getY(), hitRadius);
+	}
+
 }

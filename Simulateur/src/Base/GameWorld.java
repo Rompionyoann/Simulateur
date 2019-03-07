@@ -19,34 +19,7 @@ public class GameWorld {
 	private char derniereTouche;
 	private boolean gameIsOk = true;
 
-	private class pos {
-		double x;
-		double y;
-
-		public pos(double x, double y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public double getX() {
-			return x;
-		}
-
-		public void setX(double x) {
-			this.x = x;
-		}
-
-		public double getY() {
-			return y;
-		}
-
-		public void setY(double y) {
-			this.y = y;
-		}
-		
-	}
-
-	private List<pos> lSortie = new LinkedList<pos>();
+	private List<Position> lSortie = new LinkedList<Position>();
 
 	private static List<Entite> entites;
 
@@ -55,7 +28,7 @@ public class GameWorld {
 	 */
 	public GameWorld() {
 		entites = new LinkedList<Entite>();
-		lSortie = new LinkedList<pos>();
+		lSortie = new LinkedList<Position>();
 	}
 
 	/**
@@ -71,6 +44,7 @@ public class GameWorld {
 			// TODO
 			break;
 		case 'p':
+			System.out.println("une personne veut etre place");
 			derniereTouche = 'p';
 			// TODO
 			break;
@@ -101,7 +75,13 @@ public class GameWorld {
 		switch (derniereTouche) {
 		case 'm':
 			entites.add(new Mur(x, y, 0.01, 0.05));
-			System.out.println(entites);
+			derniereTouche = '?';
+			break;
+		case 'p':
+			Personne p = new Personne(x, y, 0.01);
+			entites.add(p);
+			p.setSortieLaPlusProche(trouveSortieLaPlusProche(p));
+
 			derniereTouche = '?';
 			break;
 		}
@@ -111,8 +91,9 @@ public class GameWorld {
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
-		for (Entite entite : GameWorld.entites)
+		for (Entite entite : GameWorld.entites) {
 			entite.step();
+		}
 	}
 
 	/**
@@ -137,22 +118,28 @@ public class GameWorld {
 	public void trouveSortie() {
 		for (Entite entite : entites) {
 			if (entite instanceof Sortie)
-				lSortie.add(new pos(entite.getX(), entite.getY()));
+				lSortie.add(new Position(entite.getX(), entite.getY()));
 		}
 	}
 
-	public void trouveSortieLaPlusProche(Personne p) {
+	public Position trouveSortieLaPlusProche(Personne p) {
 		double x = p.getX();
 		double y = p.getY();
-		double d;
-		for (pos s : lSortie) {
-			double newD = Math.Sqrt(Math.pow(Math.abs(x-s.getX()),2)+Math.pow(Math.abs(y-s.getY())));
-			if(d==null||newD<d) d
+		double d = -1;
+		Position res = new Position(0, 0);
+		for (Position s : lSortie) {
+			double newD = Math.sqrt(Math.pow(Math.abs(x - s.getX()), 2) + Math.pow(Math.abs(y - s.getY()), 2));
+			if (d < 0 || newD < d) {
+				d = newD;
+				res = s;
+			}
 		}
+		return res;
 	}
 
 	public void dessine() {
 		Batiment1();
+		trouveSortie();
 		// affiche les entites
 		for (Entite entite : entites) {
 			entite.dessine();
