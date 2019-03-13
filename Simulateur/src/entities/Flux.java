@@ -14,7 +14,7 @@ public abstract class Flux extends Entite {
 	}
 
 	//TODO
-	public void setVecteur(Map z) {
+	public void setVecteur(piece z) {
 	}
 
 	

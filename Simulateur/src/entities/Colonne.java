@@ -3,6 +3,7 @@ import Base.Entite;
 import Base.StdDraw;
 public class Colonne extends Decor {
 
+
 	public Colonne(double x, double y) {
 		super(x, y);
 	}
