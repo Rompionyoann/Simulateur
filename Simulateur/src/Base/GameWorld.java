@@ -103,19 +103,27 @@ public class GameWorld {
 	 * Draw all entities and elements of the game
 	 */
 	public void Batiment1() {
-		entites.add(new Mur(0.005, 0.5, 0.01, 1));
-		entites.add(new Mur(0.995, 0.5, 0.01, 1));
-		entites.add(new Mur(0.5, 0.005, 1, 0.01));
-		entites.add(new Mur(0.225, 0.995, 0.45, 0.01));
-		entites.add(new Mur(0.825, 0.995, 0.45, 0.01));
-		entites.add(new Mur(0.25, 0.5, 0.5, 0.01));
-		entites.add(new Sortie(0.5, 0.995, 0.1, 0.01));
-		entites.add(new Colonne(0.5, 0.8));
+		// murs contour bâtiment
+		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
+		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
+		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
+		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
+		// mur additionnels
+		entites.add(new Mur(0.15, 0.3, 0.15, 0.005));
+		entites.add(new Mur(0.9, 0.8, 0.1, 0.005));
+		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
+		entites.add(new Mur(0.5, 0.05, 0.005, 0.05));
+		entites.add(new Mur(0.3, 0.85, 0.005, 0.15));
+		// colonnes
+//		entites.add(new Colonne(0.5, 0.8));
 	}
 
 	public void AnalyseBatiment() {
 		List<Mur> murVerticale = new LinkedList<Mur>();
 		List<Mur> murHorizontale = new LinkedList<Mur>();
+		List<Sortie> ls = new LinkedList<Sortie>();
 		for (Entite e : entites) {
 			if (e instanceof Mur) {
 				if (e.getX() > 0.005 && e.getY() > 0.005 && e.getY() < 0.995) {
@@ -125,18 +133,34 @@ public class GameWorld {
 						murHorizontale.add((Mur) e);
 				}
 			}
+
 		}
+		for (Mur m : murVerticale) {
+			double lo = (1 - (2 * m.getLongueur())) / 2;
+			if (m.getY() + m.getLongueur() > 0.95) {
+				ls.add(new Sortie(m.getX(), lo, m.getLargeur(), lo));
+			} else {
+				ls.add(new Sortie(m.getX(), 2 * m.getLongueur() + lo, m.getLargeur(), lo));
+			}
+		}
+		for (Mur m : murHorizontale) {
+			double la = (1 - (2 * m.getLargeur())) / 2;
+			if (m.getX() + m.getLargeur() > 0.95) {
+				ls.add(new Sortie(la, m.getY(), 2*la, m.getLongueur()));
+			} else {
+				ls.add(new Sortie(2 * m.getLargeur() + la, m.getY(), 2*la, m.getLongueur()));
+			}
+		}
+
+		double x = 0;
 		while (!murVerticale.isEmpty()) {
-			double x = 0.005;
 			Mur murXpetit = null;
 			for (Mur m : murVerticale) {
 				if (murXpetit == null || (m.getX() < murXpetit.getX() && murXpetit.getX() > x))
 					murXpetit = m;
 			}
 			if (murXpetit != null) {
-				piece p = new piece((murXpetit.getX() - x) / 2, 0.5, (murXpetit.getX() - x), 1);
-				// tests
-				System.out.println(p.getTaillex());
+				piece p = new piece((murXpetit.getX() - x) / 2 + x, 0.5, (murXpetit.getX() - x) / 2, 0.5);
 				lPiece.add(p);
 				x = murXpetit.getX();
 				murVerticale.remove(murXpetit);
@@ -144,17 +168,18 @@ public class GameWorld {
 		}
 		List<piece> lAjoute = new LinkedList<piece>();
 		List<piece> lSupprime = new LinkedList<piece>();
-		System.out.println(murHorizontale.size());
 		for (piece p : lPiece) {
 			for (Mur m : murHorizontale) {
-				System.out.println(m.getX());
-				System.out.println((p.getX() + (p.getTaillex() / 2)));
-				System.out.println((p.getX() - (p.getTaillex() / 2)));
-				if ((m.getX() < (p.getX() + (p.getTaillex() / 2))) && (m.getX() > (p.getX() - (p.getTaillex() / 2)))) {
-					System.out.println("ayaaaa");
-					piece p1 = new piece(p.getX(), m.getY() + ((p.getTailley() - m.getY()) / 2), p.getTaillex(),
-							p.getTailley() - m.getY());
-					piece p2 = new piece(p.getX(), m.getY() / 2, p.getTaillex(), m.getY());
+				if (((m.getX() < (p.getX() + p.getTaillex())) && (m.getX() > (p.getX() - p.getTaillex())))
+						|| ((m.getX() - m.getLargeur() < (p.getX() + p.getTaillex())
+								&& m.getX() - m.getLargeur() > (p.getX() - p.getTaillex())))
+						|| ((m.getX() + m.getLargeur() < (p.getX() + p.getTaillex()))
+								&& m.getX() + m.getLargeur() > (p.getX() - p.getTaillex()))
+						|| ((p.getX() < (m.getX() + m.getLargeur()) && p.getX() > (m.getX() - m.getLargeur())))) {
+
+					piece p1 = new piece(p.getX(), (p.getHauteur() + m.getY()) / 2, p.getTaillex(),
+							(p.getHauteur() - m.getY()) / 2);
+					piece p2 = new piece(p.getX(), m.getY() / 2, p.getTaillex(), m.getY() / 2);
 					lAjoute.add(p1);
 					lAjoute.add(p2);
 					lSupprime.add(p);
@@ -167,6 +192,77 @@ public class GameWorld {
 		for (piece a : lAjoute) {
 			lPiece.add(a);
 		}
+		lSupprime.clear();
+		lAjoute.clear();
+		for (piece p1 : lPiece) {
+			// TODO: a supprimer
+			for (Sortie s : ls) {
+				p1.getSortie().add(s);
+			}
+			for (piece p2 : lPiece) {
+				if ((p1.getX() == p2.getX()) && (p1.getY() - p1.getTailley() < p2.getY() + p2.getTailley())
+						&& (p1.getY() + p1.getTailley() > p2.getY() + p2.getTailley())
+						&& (p1.getY() + p1.getTailley() != p2.getY() - p2.getTailley())
+						&& (p1.getY() - p1.getTailley() != p2.getY() - p2.getTailley())) {
+					double hauteur = (p2.getY() + p2.getTailley()) - (p1.getY() - p1.getTailley());
+					double yp3 = ((p2.getY() + p2.getTailley()) + (p1.getY() - p1.getTailley())) / 2;
+					System.out.println(yp3);
+					piece p3 = new piece(p1.getX(), yp3, p1.getTaillex(), hauteur / 2);
+					lAjoute.add(p3);
+					lSupprime.add(p1);
+					lSupprime.add(p2);
+				}
+			}
+		}
+		for (piece s : lSupprime) {
+			lPiece.remove(s);
+		}
+		for (piece a : lAjoute) {
+			lPiece.add(a);
+		}
+		for (piece p1 : lPiece) {
+			boolean b1 = false;
+			boolean b2 = false;
+			for (piece p2 : lPiece) {
+				if (p1.getX() == p2.getX() && p1 != p2) {
+					if (p1.getY() - p1.getTailley() == p2.getY() - p2.getTailley())
+						b1 = true;
+					if (p1.getY() + p1.getTailley() == p2.getY() + p2.getTailley())
+						b2 = true;
+				}
+				System.out.println(p1.getY() + p1.getTailley());
+				System.out.println(p1.getY() - p1.getTailley());
+			}
+			if (b1 && b2)
+				lSupprime.add(p1);
+		}
+		for (piece s : lSupprime) {
+			lPiece.remove(s);
+		}
+//		for (piece p : lPiece) {
+//			Position hG = new Position(p.getX() - p.getLargeur(), p.getY() + p.getHauteur());
+//			Position hD = new Position(p.getX() + p.getLargeur(), p.getY() + p.getHauteur());
+//			Position bG = new Position(p.getX() - p.getLargeur(), p.getY() - p.getHauteur());
+//			Position bD = new Position(p.getX() + p.getLargeur(), p.getY() - p.getHauteur());
+//			if (posApartientMur(hG) == null && posApartientMur(hD) == null)
+//				p.getSortie().add(new Sortie(p.getX(), hG.getY(), p.getLargeur(), 0.005));
+//			if (posApartientMur(bG) == null && posApartientMur(bD) == null)
+//				p.getSortie().add(new Sortie(p.getX(), bG.getY(), p.getLargeur(), 0.005));
+////			if (posApartientMur(hG)==null && posApartientMur(bG)==null) 
+////				p.setSortie(new Sortie((bG.getX()+bD.getX())/2,bG.getY(),bD.getX()-bG.getX(),0.005));
+//		}
+	}
+
+	public List<Sortie> posApartientMur(Position pos) {
+		List<Sortie> l = new LinkedList<Sortie>();
+		for (Entite e : entites) {
+			if (e instanceof Mur) {
+				if (e.getX() > 0.005 && e.getX() < 0.995 && e.getY() > 0.005 && e.getY() < 0.995) {
+
+				}
+			}
+		}
+		return l;
 	}
 //	public void AjoutePersonne(int n) {
 //		for (int i=0; i<n; i++) {
@@ -209,7 +305,6 @@ public class GameWorld {
 	}
 
 	public void dessine() {
-		Batiment1();
 		faitDesTruc();
 		// affiche les entites
 		for (Entite entite : entites) {
@@ -217,6 +312,7 @@ public class GameWorld {
 		}
 		// a supprimer TESTS
 		for (piece p : lPiece) {
+
 			p.dessine();
 		}
 	}
