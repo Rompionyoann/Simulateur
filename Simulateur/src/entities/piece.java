@@ -52,7 +52,7 @@ public class piece extends Entite {
 		StdDraw.filledEllipse(this.getX(), this.getY(), taillex , tailley );
 		if (sortie!=null) for(Sortie s: sortie) {
 			StdDraw.setPenColor(StdDraw.ORANGE);
-			StdDraw.filledRectangle(s.getX(), s.getY(), s.getLongueurHori()/2, s.getLongueurVert());
+			StdDraw.filledRectangle(s.getX(), s.getY(), s.getLongueurHori(), s.getLongueurVert());
 		}
 	}
 

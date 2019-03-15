@@ -7,6 +7,15 @@ public class Sortie extends Entite {
 
 	private double longueurVert;
 	private double longueurHori;
+	private boolean verticale;
+
+	public boolean isVertical() {
+		return verticale;
+	}
+
+	public void setVertical(boolean vertical) {
+		this.verticale = vertical;
+	}
 
 	public double getLongueurVert() {
 		return longueurVert;
@@ -31,6 +40,8 @@ public class Sortie extends Entite {
 		super(x, y);
 		this.longueurVert = longueurVert;
 		this.longueurHori = longueurHori;
+		if (longueurHori>longueurVert) verticale = false;
+		else verticale =true;
 	}
 
 	// fonction qui réalise le dessin de la sortie

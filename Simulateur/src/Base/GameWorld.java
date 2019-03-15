@@ -1,8 +1,10 @@
 package Base;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import entities.Colonne;
 import entities.Mur;
@@ -146,10 +148,60 @@ public class GameWorld {
 		for (Mur m : murHorizontale) {
 			double la = (1 - (2 * m.getLargeur())) / 2;
 			if (m.getX() + m.getLargeur() > 0.95) {
-				ls.add(new Sortie(la, m.getY(), 2*la, m.getLongueur()));
+				ls.add(new Sortie(la, m.getY(), la, m.getLongueur()));
 			} else {
-				ls.add(new Sortie(2 * m.getLargeur() + la, m.getY(), 2*la, m.getLongueur()));
+				ls.add(new Sortie(2 * m.getLargeur() + la, m.getY(), la, m.getLongueur()));
 			}
+		}
+		Map<Sortie, List<Double>> map = new LinkedHashMap<Sortie, List<Double>>();
+		for (Sortie s : ls) {
+			List<Double> l = new LinkedList<Double>();
+			map.put(s, l);
+			if (!s.isVertical()) {
+				for (Mur mur : murVerticale) {
+					if (mur.getX() < s.getX() + s.getLongueurHori() && mur.getX() > s.getX() - s.getLongueurHori() && mur.getX()<0.995) {
+						map.get(s).add(mur.getX());
+					}
+				}
+			} else {
+				for (Mur mur : murHorizontale) {
+					if (mur.getY() < s.getY() + s.getLongueurVert() && mur.getY() > s.getY() - s.getLongueurVert() && mur.getX() < 0.995) {
+						map.get(s).add(mur.getY());
+					}
+				}
+			}
+		}
+		for (Sortie s : map.keySet()) {
+			double minValPrec;
+			if(s.isVertical()) {
+				minValPrec=s.getY()-s.getLongueurVert();
+			}
+			else {
+				minValPrec=s.getX()-s.getLongueurHori();		
+			}
+			while (!map.get(s).isEmpty()) {
+				double minVal = 0;
+				for (double val : map.get(s)) {
+					if (val<minVal||minVal==0) {
+						minVal=val;
+					}
+				}
+					if(s.isVertical()) {
+						ls.add(new Sortie (s.getX(),(minVal+minValPrec)/2,s.getLongueurHori(),(minVal-minValPrec)/2));
+					}
+					else {
+						ls.add(new Sortie ((minVal+minValPrec)/2,s.getY(),(minVal-minValPrec)/2,s.getLongueurVert()));
+					}
+				minValPrec=minVal;
+				map.get(s).remove(minVal);
+			}
+			if(s.isVertical()) {
+				ls.add(new Sortie(s.getX(),(s.getY()+s.getLongueurVert()+minValPrec)/2,s.getLongueurHori(),(s.getY()+s.getLongueurVert()-minValPrec)/2));
+			}
+			else {
+				ls.add(new Sortie((s.getX()+s.getLongueurHori()+minValPrec)/2,s.getY(),(s.getX()+s.getLongueurHori()-minValPrec)/2,s.getLongueurVert()));
+			}
+			ls.remove(s);
 		}
 
 		double x = 0;
@@ -195,10 +247,6 @@ public class GameWorld {
 		lSupprime.clear();
 		lAjoute.clear();
 		for (piece p1 : lPiece) {
-			// TODO: a supprimer
-			for (Sortie s : ls) {
-				p1.getSortie().add(s);
-			}
 			for (piece p2 : lPiece) {
 				if ((p1.getX() == p2.getX()) && (p1.getY() - p1.getTailley() < p2.getY() + p2.getTailley())
 						&& (p1.getY() + p1.getTailley() > p2.getY() + p2.getTailley())
@@ -239,30 +287,21 @@ public class GameWorld {
 		for (piece s : lSupprime) {
 			lPiece.remove(s);
 		}
-//		for (piece p : lPiece) {
-//			Position hG = new Position(p.getX() - p.getLargeur(), p.getY() + p.getHauteur());
-//			Position hD = new Position(p.getX() + p.getLargeur(), p.getY() + p.getHauteur());
-//			Position bG = new Position(p.getX() - p.getLargeur(), p.getY() - p.getHauteur());
-//			Position bD = new Position(p.getX() + p.getLargeur(), p.getY() - p.getHauteur());
-//			if (posApartientMur(hG) == null && posApartientMur(hD) == null)
-//				p.getSortie().add(new Sortie(p.getX(), hG.getY(), p.getLargeur(), 0.005));
-//			if (posApartientMur(bG) == null && posApartientMur(bD) == null)
-//				p.getSortie().add(new Sortie(p.getX(), bG.getY(), p.getLargeur(), 0.005));
-////			if (posApartientMur(hG)==null && posApartientMur(bG)==null) 
-////				p.setSortie(new Sortie((bG.getX()+bD.getX())/2,bG.getY(),bD.getX()-bG.getX(),0.005));
-//		}
-	}
-
-	public List<Sortie> posApartientMur(Position pos) {
-		List<Sortie> l = new LinkedList<Sortie>();
-		for (Entite e : entites) {
-			if (e instanceof Mur) {
-				if (e.getX() > 0.005 && e.getX() < 0.995 && e.getY() > 0.005 && e.getY() < 0.995) {
-
-				}
+		for (piece p : lPiece) {
+			for (Sortie s : ls) {
+				if(posApartientPiece(new Position(s.getX(),s.getY()))) p.getSortie().add(s);
 			}
 		}
-		return l;
+	}
+
+	public Boolean posApartientPiece(Position pos) {
+		boolean b = false;
+		for (piece p : lPiece) {
+			if (pos.getX() > p.getX() - p.getTaillex() - 0.005 && p.getX() < p.getX() + p.getTaillex() + 0.005
+					&& pos.getY() > p.getY() - p.getTailley() - 0.005 && p.getY() < p.getY() + p.getTailley() + 0.005)
+				b = true;
+		}
+		return b;
 	}
 //	public void AjoutePersonne(int n) {
 //		for (int i=0; i<n; i++) {
