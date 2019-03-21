@@ -44,11 +44,10 @@ public class Personne extends Entite {
 	// TODO Fonction Modifiant les valeurs de X et Y en fonction de l'executions de
 	// chaque step
 	public void step() {
-		if (Norme==0) {
 			vecteurSortie = new Position((sortieLaPlusProche.getX() - this.getX()),
 					(sortieLaPlusProche.getY() - this.getY()));
 			Norme = Math.sqrt(Math.pow(vecteurSortie.getX(), 2) + Math.pow(vecteurSortie.getY(), 2));
-		}
+
 		double x =vitesse * (vecteurSortie.getX()/Norme);
 //		System.out.println("mon vecteur sortie en x "+ vecteurSortie.getX());
 //		System.out.println("ma norme est de  " + Norme);

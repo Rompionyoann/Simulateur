@@ -12,7 +12,16 @@ public class piece extends Entite {
 	private double hauteur;
 	private double largeur;
 	private List<Sortie> sortie;
-	
+	private Sortie vraiSortie;
+
+	public Sortie getVraiSortie() {
+		return vraiSortie;
+	}
+
+	public void setVraiSortie(Sortie vraiSortie) {
+		this.vraiSortie = vraiSortie;
+	}
+
 	public List<Sortie> getSortie() {
 		return sortie;
 	}
@@ -23,7 +32,7 @@ public class piece extends Entite {
 		this.tailley = tailley;
 		hauteur = 2 * tailley;
 		largeur = 2 * taillex;
-		sortie=new LinkedList<Sortie>();
+		sortie = new LinkedList<Sortie>();
 	}
 
 	public double getTaillex() {
@@ -49,10 +58,12 @@ public class piece extends Entite {
 	@Override
 	public void dessine() {
 		StdDraw.setPenColor(StdDraw.RED);
-		StdDraw.filledEllipse(this.getX(), this.getY(), taillex , tailley );
-		if (sortie!=null) for(Sortie s: sortie) {
+		StdDraw.filledEllipse(this.getX(), this.getY(), taillex, tailley);
+		if (vraiSortie != null) {
+			System.out.println(vraiSortie.getX()+" "+vraiSortie.getY());
 			StdDraw.setPenColor(StdDraw.ORANGE);
-			StdDraw.filledRectangle(s.getX(), s.getY(), s.getLongueurHori(), s.getLongueurVert());
+			StdDraw.filledRectangle(vraiSortie.getX(), vraiSortie.getY(), vraiSortie.getLongueurHori(),
+					vraiSortie.getLongueurVert());
 		}
 	}
 

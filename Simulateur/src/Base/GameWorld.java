@@ -21,7 +21,7 @@ import entities.piece;
 public class GameWorld {
 	private char derniereTouche;
 	private boolean gameIsOk = true;
-	private List<Position> lSortie;
+	private List<Sortie> lSortie;
 	private static List<Entite> entites;
 	private List<piece> lPiece = new LinkedList<piece>();
 
@@ -30,9 +30,16 @@ public class GameWorld {
 	 */
 	public GameWorld() {
 		entites = new LinkedList<Entite>();
-		lSortie = new LinkedList<Position>();
+		lSortie = new LinkedList<Sortie>();
 		Batiment1();
+		for (Entite e : entites) {
+			if (e instanceof Sortie) {
+				System.out.println("+1");
+				lSortie.add((Sortie) e);
+			}
+		}
 		AnalyseBatiment();
+
 	}
 
 	/**
@@ -96,6 +103,7 @@ public class GameWorld {
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
+		faitDesTruc();
 		for (Entite entite : GameWorld.entites) {
 			entite.step();
 		}
@@ -113,7 +121,7 @@ public class GameWorld {
 		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
 		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
 		// mur additionnels
-		entites.add(new Mur(0.15, 0.3, 0.15, 0.005));
+		entites.add(new Mur(0.2, 0.3, 0.2, 0.005));
 		entites.add(new Mur(0.9, 0.8, 0.1, 0.005));
 		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
 		entites.add(new Mur(0.5, 0.05, 0.005, 0.05));
@@ -159,13 +167,15 @@ public class GameWorld {
 			map.put(s, l);
 			if (!s.isVertical()) {
 				for (Mur mur : murVerticale) {
-					if (mur.getX() < s.getX() + s.getLongueurHori() && mur.getX() > s.getX() - s.getLongueurHori() && mur.getX()<0.995) {
+					if (mur.getX() < s.getX() + s.getLongueurHori() && mur.getX() > s.getX() - s.getLongueurHori()
+							&& mur.getX() < 0.995) {
 						map.get(s).add(mur.getX());
 					}
 				}
 			} else {
 				for (Mur mur : murHorizontale) {
-					if (mur.getY() < s.getY() + s.getLongueurVert() && mur.getY() > s.getY() - s.getLongueurVert() && mur.getX() < 0.995) {
+					if (mur.getY() < s.getY() + s.getLongueurVert() && mur.getY() > s.getY() - s.getLongueurVert()
+							&& mur.getX() < 0.995) {
 						map.get(s).add(mur.getY());
 					}
 				}
@@ -173,33 +183,34 @@ public class GameWorld {
 		}
 		for (Sortie s : map.keySet()) {
 			double minValPrec;
-			if(s.isVertical()) {
-				minValPrec=s.getY()-s.getLongueurVert();
-			}
-			else {
-				minValPrec=s.getX()-s.getLongueurHori();		
+			if (s.isVertical()) {
+				minValPrec = s.getY() - s.getLongueurVert();
+			} else {
+				minValPrec = s.getX() - s.getLongueurHori();
 			}
 			while (!map.get(s).isEmpty()) {
 				double minVal = 0;
 				for (double val : map.get(s)) {
-					if (val<minVal||minVal==0) {
-						minVal=val;
+					if (val < minVal || minVal == 0) {
+						minVal = val;
 					}
 				}
-					if(s.isVertical()) {
-						ls.add(new Sortie (s.getX(),(minVal+minValPrec)/2,s.getLongueurHori(),(minVal-minValPrec)/2));
-					}
-					else {
-						ls.add(new Sortie ((minVal+minValPrec)/2,s.getY(),(minVal-minValPrec)/2,s.getLongueurVert()));
-					}
-				minValPrec=minVal;
+				if (s.isVertical()) {
+					ls.add(new Sortie(s.getX(), (minVal + minValPrec) / 2, s.getLongueurHori(),
+							(minVal - minValPrec) / 2));
+				} else {
+					ls.add(new Sortie((minVal + minValPrec) / 2, s.getY(), (minVal - minValPrec) / 2,
+							s.getLongueurVert()));
+				}
+				minValPrec = minVal;
 				map.get(s).remove(minVal);
 			}
-			if(s.isVertical()) {
-				ls.add(new Sortie(s.getX(),(s.getY()+s.getLongueurVert()+minValPrec)/2,s.getLongueurHori(),(s.getY()+s.getLongueurVert()-minValPrec)/2));
-			}
-			else {
-				ls.add(new Sortie((s.getX()+s.getLongueurHori()+minValPrec)/2,s.getY(),(s.getX()+s.getLongueurHori()-minValPrec)/2,s.getLongueurVert()));
+			if (s.isVertical()) {
+				ls.add(new Sortie(s.getX(), (s.getY() + s.getLongueurVert() + minValPrec) / 2, s.getLongueurHori(),
+						(s.getY() + s.getLongueurVert() - minValPrec) / 2));
+			} else {
+				ls.add(new Sortie((s.getX() + s.getLongueurHori() + minValPrec) / 2, s.getY(),
+						(s.getX() + s.getLongueurHori() - minValPrec) / 2, s.getLongueurVert()));
 			}
 			ls.remove(s);
 		}
@@ -278,8 +289,6 @@ public class GameWorld {
 					if (p1.getY() + p1.getTailley() == p2.getY() + p2.getTailley())
 						b2 = true;
 				}
-				System.out.println(p1.getY() + p1.getTailley());
-				System.out.println(p1.getY() - p1.getTailley());
 			}
 			if (b1 && b2)
 				lSupprime.add(p1);
@@ -289,19 +298,34 @@ public class GameWorld {
 		}
 		for (piece p : lPiece) {
 			for (Sortie s : ls) {
-				if(posApartientPiece(new Position(s.getX(),s.getY()))) p.getSortie().add(s);
+				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
+					p.getSortie().add(s);
 			}
+			for (Sortie s : lSortie) {
+				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
+					p.getSortie().add(s);
+			}
+			double distanceSortie = -1;
+			System.out.println(p.getSortie().size());
+			Sortie vraiSortie = null;
+			for (Sortie s : p.getSortie()) {
+				for (Sortie p2 : lSortie) {
+					double val = Math.sqrt(
+							Math.pow(Math.abs(p2.getX() - s.getX()), 2) + Math.pow(Math.abs(p2.getY() - s.getY()), 2));
+					if (val < distanceSortie || vraiSortie == null) {
+						vraiSortie = s;
+						distanceSortie = val;
+					}
+				}
+			}
+			p.setVraiSortie(vraiSortie);
 		}
 	}
 
-	public Boolean posApartientPiece(Position pos) {
-		boolean b = false;
-		for (piece p : lPiece) {
-			if (pos.getX() > p.getX() - p.getTaillex() - 0.005 && p.getX() < p.getX() + p.getTaillex() + 0.005
-					&& pos.getY() > p.getY() - p.getTailley() - 0.005 && p.getY() < p.getY() + p.getTailley() + 0.005)
-				b = true;
-		}
-		return b;
+	public Boolean posApartientPiece(Position pos, piece p) {
+		return (pos.getX() > p.getX() - p.getTaillex() - 0.005 && pos.getX() < p.getX() + p.getTaillex() + 0.005
+				&& pos.getY() > p.getY() - p.getTailley() - 0.005 && pos.getY() < p.getY() + p.getTailley() + 0.005);
+
 	}
 //	public void AjoutePersonne(int n) {
 //		for (int i=0; i<n; i++) {
@@ -315,17 +339,43 @@ public class GameWorld {
 	 * du batiment
 	 */
 	public void faitDesTruc() {
+		List<Entite> supp = new LinkedList<Entite>();
 		for (Entite entite : entites) {
 			if (entite instanceof Sortie) {
-				lSortie.add(new Position(entite.getX(), entite.getY()));
 				for (Entite entite2 : entites) {
-					if (entite instanceof Personne) {
-						if (entite.getX() == entite2.getX() && entite.getY() == entite2.getY())
-							entites.remove(entite2);
+					if (entite2 instanceof Personne) {
+						if (entite2.getX() < entite.getX()+((Sortie)entite).getLongueurHori() && entite2.getX() > entite.getX()-((Sortie)entite).getLongueurHori() &&
+								entite2.getY() < entite.getY()+((Sortie)entite).getLongueurVert()+0.005 && entite2.getY() > entite.getY()-((Sortie)entite).getLongueurVert()-0.005)
+							supp.add(entite2);
 					}
 				}
 			}
+			if (entite instanceof Personne) {
+				((Personne) entite).setSortieLaPlusProche(trouveSortiePiece(((Personne) entite)));
+			}
 		}
+		for(Entite e : supp) {
+			entites.remove(e);
+		}
+	}
+
+	public Position trouveSortiePiece(Personne pos) {
+		Position result = new Position(0, 0);
+		double pluspetiteVal = -1;
+		for (piece p : lPiece) {
+			for (Sortie s : lSortie) {
+				double val = Math.sqrt(Math.pow(Math.abs(p.getVraiSortie().getX() - s.getX()), 2)
+						+ Math.pow(Math.abs(p.getVraiSortie().getY() - s.getY()), 2));
+				if ((pluspetiteVal < 0 || val < pluspetiteVal) && pos.getX() > p.getX() - p.getTaillex() - 0.005
+						&& pos.getX() < p.getX() + p.getTaillex() + 0.005
+						&& pos.getY() > p.getY() - p.getTailley() - 0.005
+						&& pos.getY() < p.getY() + p.getTailley() + 0.005) {
+					result = new Position(p.getVraiSortie().getX(), p.getVraiSortie().getY());
+					pluspetiteVal = val;
+				}
+			}
+		}
+		return result;
 	}
 
 	public Position trouveSortieLaPlusProche(Personne p) {
@@ -333,27 +383,25 @@ public class GameWorld {
 		double y = p.getY();
 		double d = -1;
 		Position res = new Position(0, 0);
-		for (Position s : lSortie) {
+		for (Sortie s : lSortie) {
 			double newD = Math.sqrt(Math.pow(Math.abs(x - s.getX()), 2) + Math.pow(Math.abs(y - s.getY()), 2));
 			if (d < 0 || newD < d) {
 				d = newD;
-				res = s;
+				res = new Position(s.getX(), s.getY());
 			}
 		}
 		return res;
 	}
 
 	public void dessine() {
-		faitDesTruc();
 		// affiche les entites
 		for (Entite entite : entites) {
 			entite.dessine();
 		}
 		// a supprimer TESTS
-		for (piece p : lPiece) {
-
-			p.dessine();
-		}
+//		for (piece p : lPiece) {
+//			p.dessine();
+//		}
 	}
 
 	public boolean isGameIsOk() {

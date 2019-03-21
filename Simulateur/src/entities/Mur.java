@@ -18,6 +18,11 @@ public class Mur extends Decor {
 	@Override
 	public void dessine() {
 		StdDraw.setPenColor(StdDraw.BLACK);
+		//Tests
+//		if (verticale) {
+//			StdDraw.setPenColor(StdDraw.BLUE);
+//		}else StdDraw.setPenColor(StdDraw.GREEN);
+		
 		StdDraw.filledRectangle(this.getX(), this.getY(), largeur, longueur);
 	}
 
