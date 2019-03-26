@@ -24,6 +24,7 @@ public class GameWorld {
 	private List<Sortie> lSortie;
 	private static List<Entite> entites;
 	private List<piece> lPiece = new LinkedList<piece>();
+	private List<Personne> listPersonne= new LinkedList<Personne>();
 
 	/**
 	 * Constructor of the Gameworld
@@ -105,6 +106,12 @@ public class GameWorld {
 	public void step() {
 		faitDesTruc();
 		for (Entite entite : GameWorld.entites) {
+			if(entite instanceof Personne) {
+				((Personne) entite).setNbStep(((Personne) entite).getNbStep()+1);
+				if(((Personne) entite).getNbStep()%1==0 ){
+					àProximitédunePersonne((Personne) entite);
+					}
+			}
 			entite.step();
 		}
 	}
@@ -113,7 +120,7 @@ public class GameWorld {
 	 * Draw all entities and elements of the game
 	 */
 	public void Batiment1() {
-		// murs contour b�timent
+		// murs contour b�timent
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
@@ -335,7 +342,7 @@ public class GameWorld {
 
 	/*
 	 * faitDesTruc est une fonction qui repertorie toute les sortie d'un batiment
-	 * faitDesTruc supprime �galement les peronne qui ont pass� la porte de sortie
+	 * faitDesTruc supprime �galement les peronne qui ont pass� la porte de sortie
 	 * du batiment
 	 */
 	public void faitDesTruc() {
@@ -352,6 +359,8 @@ public class GameWorld {
 			}
 			if (entite instanceof Personne) {
 				((Personne) entite).setSortieLaPlusProche(trouveSortiePiece(((Personne) entite)));
+					
+				
 			}
 		}
 		for(Entite e : supp) {
@@ -377,7 +386,26 @@ public class GameWorld {
 		}
 		return result;
 	}
-
+	public void àProximitédunePersonne(Personne p) {
+		if(p.getàProximité()!=null) {
+			p.setàProximité(new LinkedList<Personne>());
+		}
+		if(this.listPersonne!=null) {
+		for(Entite c: this.entites) {
+			if(c instanceof Personne && c!=p) {
+			double a = Math.abs(p.getX()-c.getX());
+			double b= Math.abs(p.getY()-c.getY());
+			double d=Math.sqrt(a*a+b*b);
+			if(d<=p.getProximityRadius()) {
+				System.out.println("salope");
+				p.àProximitéAdd((Personne)c);
+			}
+			p.àProximitéRemove((Personne) c);
+			}
+		}
+		}
+		
+	}
 	public Position trouveSortieLaPlusProche(Personne p) {
 		double x = p.getX();
 		double y = p.getY();
