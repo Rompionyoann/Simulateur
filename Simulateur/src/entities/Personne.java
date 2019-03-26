@@ -11,12 +11,12 @@ public class Personne extends Entite {
 
 	private Position sortieLaPlusProche =new Position(-1,-1);
 	private Position vecteurSortie;
-	private double vitesse = 0.01;
+	private double vitesse = 0.00325;
 	private double Norme =0;
 	private double hitRadius;
 	private List<Personne> àProximité= new LinkedList<Personne>();
 	private int nbStep;
-	private double proximityRadius=hitRadius*10;
+	private double proximityRadius=0.05;
 	
 	
 	public int getNbStep() {
@@ -98,9 +98,12 @@ public class Personne extends Entite {
 			Norme = Math.sqrt(Math.pow(vecteurSortie.getX(), 2) + Math.pow(vecteurSortie.getY(), 2));
 			if(this.àProximité != null) {
 			for(Personne p: this.àProximité) {
+				
 				double d=Math.random();
-				if(p!=null) {				
+				if(p!=null) {	
+					System.out.println(surLatrajectoire(p));
 				if(surLatrajectoire(p)) {				
+					System.out.println("ko");
 					if(d<0.5) {
 						this.vecteurSortie.setY(0);
 						this.vecteurSortie.setX(0);
@@ -137,15 +140,17 @@ public class Personne extends Entite {
 	private Boolean surLatrajectoire(Personne p) {
 		double a= Math.sqrt(Math.pow((this.getX()-p.getX()),2)+Math.pow(this.getY()-p.getY(), 2));
 		double b=this.proximityRadius;
-		Position d=new Position((vecteurSortie.getX()*this.proximityRadius) , vecteurSortie.getY()*this.proximityRadius);
+		Position d=new Position((vecteurSortie.getX()+this.proximityRadius) , vecteurSortie.getY()+this.proximityRadius);
 		double c= Math.sqrt(Math.pow((d.getX()-p.getX()),2)+Math.pow(d.getY()-p.getY(), 2));
-		double h = Math.sqrt((Math.pow(c, 2))-((a*a-b*b+c*c)/(2*a)));
+		double h = Math.sqrt(Math.abs((Math.pow(c, 2))-((a*a-b*b+c*c)/(2*a))));
+		System.out.println(h);
 		return h<=this.hitRadius;
 	}
 	// TODO Fonction qui repr�sente un individu sur la map
 	public void dessine() {
 		StdDraw.setPenColor(StdDraw.GREEN);
 		StdDraw.filledCircle(this.getX(), this.getY(), hitRadius);
+		StdDraw.circle(this.getX(), this.getY(), proximityRadius);
 	}
 
 }

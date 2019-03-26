@@ -389,6 +389,7 @@ public class GameWorld {
 	public void àProximitédunePersonne(Personne p) {
 		if(p.getàProximité()!=null) {
 			p.setàProximité(new LinkedList<Personne>());
+			
 		}
 		if(this.listPersonne!=null) {
 		for(Entite c: this.entites) {
@@ -396,7 +397,10 @@ public class GameWorld {
 			double a = Math.abs(p.getX()-c.getX());
 			double b= Math.abs(p.getY()-c.getY());
 			double d=Math.sqrt(a*a+b*b);
+			System.out.println(d);
+			System.out.println(p.getProximityRadius());
 			if(d<=p.getProximityRadius()) {
+				System.out.println(d);
 				System.out.println("salope");
 				p.àProximitéAdd((Personne)c);
 			}
