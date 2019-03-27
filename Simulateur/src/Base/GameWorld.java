@@ -24,7 +24,7 @@ public class GameWorld {
 	private List<Sortie> lSortie;
 	private static List<Entite> entites;
 	private List<piece> lPiece = new LinkedList<piece>();
-	private List<Personne> listPersonne= new LinkedList<Personne>();
+	private List<Personne> listPersonne = new LinkedList<Personne>();
 
 	/**
 	 * Constructor of the Gameworld
@@ -32,7 +32,7 @@ public class GameWorld {
 	public GameWorld() {
 		entites = new LinkedList<Entite>();
 		lSortie = new LinkedList<Sortie>();
-		Batiment1();
+		Batiment2();
 		for (Entite e : entites) {
 			if (e instanceof Sortie) {
 				System.out.println("+1");
@@ -46,7 +46,8 @@ public class GameWorld {
 	/**
 	 * Gestion des interactions clavier avec l'utilisateur
 	 * 
-	 * @param key Touche pressee par l'utilisateur
+	 * @param key
+	 *            Touche pressee par l'utilisateur
 	 */
 	public void processUserInput(char key) {
 		switch (key) {
@@ -78,11 +79,12 @@ public class GameWorld {
 	}
 
 	/**
-	 * Gestion des interactions souris avec l'utilisateur (la souris a été
-	 * cliquée)
+	 * Gestion des interactions souris avec l'utilisateur (la souris a été cliquée)
 	 * 
-	 * @param x position en x de la souris au moment du clic
-	 * @param y position en y de la souris au moment du clic
+	 * @param x
+	 *            position en x de la souris au moment du clic
+	 * @param y
+	 *            position en y de la souris au moment du clic
 	 */
 	public void processMouseClick(double x, double y) {
 		switch (derniereTouche) {
@@ -94,7 +96,7 @@ public class GameWorld {
 			Personne p = new Personne(x, y, 0.01);
 			entites.add(p);
 			p.setSortieLaPlusProche(trouveSortieLaPlusProche(p));
-
+			listPersonne.add(p);
 			derniereTouche = '?';
 			break;
 		}
@@ -104,13 +106,14 @@ public class GameWorld {
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
+		System.out.println(listPersonne.size());
 		faitDesTruc();
 		for (Entite entite : GameWorld.entites) {
-			if(entite instanceof Personne) {
-				((Personne) entite).setNbStep(((Personne) entite).getNbStep()+1);
-				if(((Personne) entite).getNbStep()%1==0 ){
+			if (entite instanceof Personne) {
+				((Personne) entite).setNbStep(((Personne) entite).getNbStep() + 1);
+				if (((Personne) entite).getNbStep() % 1 == 0) {
 					àProximitédunePersonne((Personne) entite);
-					}
+				}
 			}
 			entite.step();
 		}
@@ -124,17 +127,25 @@ public class GameWorld {
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
-		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
-		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
-		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
+		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
+		entites.add(new Sortie(0.6, 0.995, 0.025, 0.005));
 		// mur additionnels
 		entites.add(new Mur(0.2, 0.3, 0.2, 0.005));
 		entites.add(new Mur(0.9, 0.8, 0.1, 0.005));
-		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
-		entites.add(new Mur(0.5, 0.05, 0.005, 0.05));
+		entites.add(new Mur(0.4, 0.6, 0.4, 0.005));
+		entites.add(new Mur(0.2, 0.05, 0.005, 0.05));
 		entites.add(new Mur(0.3, 0.85, 0.005, 0.15));
 		// colonnes
-//		entites.add(new Colonne(0.5, 0.8));
+		// entites.add(new Colonne(0.5, 0.8));
+	}
+
+	public void Batiment2() {
+		// murs contour b�timent
+		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
+		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
+		entites.add(new Sortie(0.6, 0.995, 0.025, 0.005));
 	}
 
 	public void AnalyseBatiment() {
@@ -334,11 +345,11 @@ public class GameWorld {
 				&& pos.getY() > p.getY() - p.getTailley() - 0.005 && pos.getY() < p.getY() + p.getTailley() + 0.005);
 
 	}
-//	public void AjoutePersonne(int n) {
-//		for (int i=0; i<n; i++) {
-//			entite.add(Personne())
-//		}
-//	}
+	// public void AjoutePersonne(int n) {
+	// for (int i=0; i<n; i++) {
+	// entite.add(Personne())
+	// }
+	// }
 
 	/*
 	 * faitDesTruc est une fonction qui repertorie toute les sortie d'un batiment
@@ -351,19 +362,20 @@ public class GameWorld {
 			if (entite instanceof Sortie) {
 				for (Entite entite2 : entites) {
 					if (entite2 instanceof Personne) {
-						if (entite2.getX() < entite.getX()+((Sortie)entite).getLongueurHori() && entite2.getX() > entite.getX()-((Sortie)entite).getLongueurHori() &&
-								entite2.getY() < entite.getY()+((Sortie)entite).getLongueurVert()+0.005 && entite2.getY() > entite.getY()-((Sortie)entite).getLongueurVert()-0.005)
+						if (entite2.getX() < entite.getX() + ((Sortie) entite).getLongueurHori()
+								&& entite2.getX() > entite.getX() - ((Sortie) entite).getLongueurHori()
+								&& entite2.getY() < entite.getY() + ((Sortie) entite).getLongueurVert() + 0.005
+								&& entite2.getY() > entite.getY() - ((Sortie) entite).getLongueurVert() - 0.005)
 							supp.add(entite2);
 					}
 				}
 			}
 			if (entite instanceof Personne) {
 				((Personne) entite).setSortieLaPlusProche(trouveSortiePiece(((Personne) entite)));
-					
-				
+
 			}
 		}
-		for(Entite e : supp) {
+		for (Entite e : supp) {
 			entites.remove(e);
 		}
 	}
@@ -386,30 +398,32 @@ public class GameWorld {
 		}
 		return result;
 	}
+
 	public void àProximitédunePersonne(Personne p) {
-		if(p.getàProximité()!=null) {
+		if (p.getàProximité() != null) {
 			p.setàProximité(new LinkedList<Personne>());
-			
+
 		}
-		if(this.listPersonne!=null) {
-		for(Entite c: this.entites) {
-			if(c instanceof Personne && c!=p) {
-			double a = Math.abs(p.getX()-c.getX());
-			double b= Math.abs(p.getY()-c.getY());
-			double d=Math.sqrt(a*a+b*b);
-			System.out.println(d);
-			System.out.println(p.getProximityRadius());
-			if(d<=p.getProximityRadius()) {
-				System.out.println(d);
-				System.out.println("salope");
-				p.àProximitéAdd((Personne)c);
+		if (this.listPersonne != null) {
+			for (Entite c : this.entites) {
+				if (c instanceof Personne && c != p) {
+					double a = Math.abs(p.getX() - c.getX());
+					double b = Math.abs(p.getY() - c.getY());
+					double d = Math.sqrt(a * a + b * b);
+					// System.out.println(d);
+					// System.out.println(p.getProximityRadius());
+					if (d <= p.getProximityRadius()) {
+						// System.out.println(d);
+						// System.out.println("salope");
+						p.àProximitéAdd((Personne) c);
+					}
+					p.àProximitéRemove((Personne) c);
+				}
 			}
-			p.àProximitéRemove((Personne) c);
-			}
 		}
-		}
-		
+
 	}
+
 	public Position trouveSortieLaPlusProche(Personne p) {
 		double x = p.getX();
 		double y = p.getY();
@@ -431,9 +445,9 @@ public class GameWorld {
 			entite.dessine();
 		}
 		// a supprimer TESTS
-//		for (piece p : lPiece) {
-//			p.dessine();
-//		}
+		// for (piece p : lPiece) {
+		// p.dessine();
+		// }
 	}
 
 	public boolean isGameIsOk() {

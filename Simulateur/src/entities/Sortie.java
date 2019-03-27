@@ -35,7 +35,7 @@ public class Sortie extends Entite {
 
 	// Initialisation d'une sortie de notre champ, X et Y correspondant a la
 	// position et Longueur a la longueur.
-	// Longueur Vert et Hori ne peuvent pas etre toutes les deux différentes de 0
+	// Longueur Vert et Hori ne peuvent pas etre toutes les deux diffï¿½rentes de 0
 	public Sortie(double x, double y, double longueurHori, double longueurVert) {
 		super(x, y);
 		this.longueurVert = longueurVert;
@@ -44,7 +44,7 @@ public class Sortie extends Entite {
 		else verticale =true;
 	}
 
-	// fonction qui réalise le dessin de la sortie
+	// fonction qui rï¿½alise le dessin de la sortie
 	public void dessine() {
 		StdDraw.setPenColor(StdDraw.RED);
 		StdDraw.filledRectangle(this.getX(), this.getY(), longueurHori, longueurVert);
