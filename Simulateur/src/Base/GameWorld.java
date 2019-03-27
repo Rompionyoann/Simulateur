@@ -120,16 +120,60 @@ public class GameWorld {
 		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
 		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
 		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
+		entites.add(new Sortie(0.7, 0.005, 0.025, 0.005));
 		// mur additionnels
 		entites.add(new Mur(0.2, 0.3, 0.2, 0.005));
-		entites.add(new Mur(0.9, 0.8, 0.1, 0.005));
+		entites.add(new Mur(0.8, 0.6, 0.005, 0.4));
 		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
 		entites.add(new Mur(0.5, 0.05, 0.005, 0.05));
 		entites.add(new Mur(0.3, 0.85, 0.005, 0.15));
 		// colonnes
 //		entites.add(new Colonne(0.5, 0.8));
 	}
+	
+	public void Batiment2() {
+		// murs contour bâtiment
+		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
+		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
+		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
+		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
+		// mur additionnels
+//		entites.add(new Mur(0.45, 0.1, 0.45, 0.005));
+		entites.add(new Mur(0.6, 0.3, 0.4, 0.005));
+//		entites.add(new Mur(0.45, 0.3, 0.45, 0.005));
+//		entites.add(new Mur(0.55, 0.4, 0.45, 0.005));
+		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
+//		entites.add(new Mur(0.55, 0.6, 0.45, 0.005));
+//		entites.add(new Mur(0.45, 0.7, 0.45, 0.005));
+//		entites.add(new Mur(0.6, 0.8, 0.4, 0.005));
+		entites.add(new Mur(0.2, 0.9, 0.005, 0.1));
+		entites.add(new Mur(0.8, 0.95, 0.005, 0.05));
+		
+	}
+	public void Batiment3() {
+		// murs contour bâtiment
+		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
+		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
+		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
+		entites.add(new Sortie(0.005, 0.5, 0.005, 0.025));
+		// mur additionnels
 
+		entites.add(new Mur(0.9, 0.6, 0.005, 0.4));
+		entites.add(new Mur(0.8, 0.4, 0.005, 0.4));
+		entites.add(new Mur(0.7, 0.6, 0.005, 0.4));
+		entites.add(new Mur(0.6, 0.4, 0.005, 0.4));
+		entites.add(new Mur(0.5, 0.6, 0.005, 0.4));
+		entites.add(new Mur(0.4, 0.4, 0.005, 0.4));
+		entites.add(new Mur(0.3, 0.6, 0.005, 0.4));
+		entites.add(new Mur(0.2, 0.4, 0.005, 0.4));
+		
+		
+	}
+	
 	public void AnalyseBatiment() {
 		List<Mur> murVerticale = new LinkedList<Mur>();
 		List<Mur> murHorizontale = new LinkedList<Mur>();
