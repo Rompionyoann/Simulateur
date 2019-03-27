@@ -49,7 +49,7 @@ public class GameWorld {
 				lSortie.add((Sortie) e);
 			}
 		}
-		this.spawnPersonne(250);
+		//this.spawnPersonne(250);
 		AnalyseBatiment();
 	}
 

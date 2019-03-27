@@ -5,12 +5,12 @@ public class Main {
 	public static void main(String[] args) {
 		
 		GameWorld world = new GameWorld();
-		
+		Fenetre fenetre= new Fenetre(world);
 		// reglage de la taille de la fenetre de jeu, en pixels (nb: un écran fullHD =
 		// 1980x1050 pixels)
 		
 		//if(world.isGameCanStart()) {
-		StdDraw.setCanvasSize(600, 600);
+		StdDraw.setCanvasSize(600,600);
 		
 
 		// permet le double buffering, pour type filter textpermettre l'animation
@@ -32,7 +32,7 @@ public class Main {
 				world.processMouseClick(StdDraw.mouseX(), StdDraw.mouseY());
 			}
 			
-			if(world.getPausePlay())
+			if(world.getPausePlay() || fenetre.getCommencer())
 			world.step();
 
 			// dessine la carte
@@ -45,5 +45,5 @@ public class Main {
 		//}
 	}
 	}
+	}
 
-}
