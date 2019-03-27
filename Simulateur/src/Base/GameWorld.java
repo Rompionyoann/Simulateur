@@ -95,7 +95,7 @@ public class GameWorld {
 			derniereTouche = '?';
 			break;
 		case 'p':
-			Personne p = new Personne(x, y, 0.01);
+			Personne p = new Personne(x, y, taillePersonne);
 			entites.add(p);
 			p.setSortieLaPlusProche(trouveSortieLaPlusProche(p));
 			listPersonne.add(p);
@@ -121,6 +121,14 @@ public class GameWorld {
 		}
 	}
 
+	public double getTaillePersonne() {
+		return taillePersonne;
+	}
+
+	public void setTaillePersonne(double taillePersonne) {
+		this.taillePersonne = taillePersonne;
+	}
+
 	/**
 	 * Draw all entities and elements of the game
 	 */
@@ -130,24 +138,29 @@ public class GameWorld {
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
 		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
-		entites.add(new Sortie(0.6, 0.995, 0.025, 0.005));
+		entites.add(new Sortie(0.7, 0.995, 0.025, 0.005));
+		entites.add(new Sortie(0.995, 0.2, 0.005, 0.025));
 		// mur additionnels
-		entites.add(new Mur(0.2, 0.3, 0.2, 0.005));
-		entites.add(new Mur(0.9, 0.8, 0.1, 0.005));
+		entites.add(new Mur(0.3, 0.3, 0.3, 0.005));
+		entites.add(new Mur(0.8, 0.8, 0.2, 0.005));
 		entites.add(new Mur(0.4, 0.6, 0.4, 0.005));
-		entites.add(new Mur(0.2, 0.05, 0.005, 0.05));
-		entites.add(new Mur(0.3, 0.85, 0.005, 0.15));
+		entites.add(new Mur(0.15, 0.7, 0.15, 0.005));
+		//entites.add(new Mur(0.15, 0.9, 0.15, 0.005));
+		entites.add(new Mur(0.6, 0.1, 0.005, 0.1));
+		entites.add(new Mur(0.5, 0.85, 0.005, 0.15));
 		// colonnes
 		// entites.add(new Colonne(0.5, 0.8));
 	}
 
 	public void Batiment2() {
+		this.setTaillePersonne(0.05);
 		// murs contour b�timent
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
 		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
 		entites.add(new Sortie(0.6, 0.995, 0.025, 0.005));
+		
 	}
 
 	public void AnalyseBatiment() {
@@ -316,6 +329,7 @@ public class GameWorld {
 		for (piece s : lSupprime) {
 			lPiece.remove(s);
 		}
+		lSupprime.clear();
 		for (piece p : lPiece) {
 			for (Sortie s : ls) {
 				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
@@ -325,6 +339,17 @@ public class GameWorld {
 				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
 					p.getSortie().add(s);
 			}
+			List<Sortie> sortiesupp = new LinkedList<Sortie>();
+			for (Sortie s :p.getSortie()) {
+				if (s.getX()>p.getX()-p.getTaillex()+0.05 && s.getX()<p.getX()+p.getTaillex()-0.05 && s.getY()>p.getY()-p.getTailley()+0.05 && s.getY()<p.getY()+p.getTailley()-0.05)
+					sortiesupp.add(s);
+			}
+			for (Sortie s: sortiesupp) {
+				p.getSortie().remove(s);
+			}
+			sortiesupp =new LinkedList<Sortie>();
+			
+			
 			double distanceSortie = -1;
 			System.out.println(p.getSortie().size());
 			Sortie vraiSortie = null;
