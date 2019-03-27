@@ -16,7 +16,7 @@ import entities.piece;
  * The class GameWorld that handle the flow of the game
  * 
  * @author hugom
- *
+ * 
  */
 public class GameWorld {
 	private char derniereTouche;
@@ -25,6 +25,7 @@ public class GameWorld {
 	private static List<Entite> entites;
 	private List<piece> lPiece = new LinkedList<piece>();
 	private List<Personne> listPersonne = new LinkedList<Personne>();
+	private double taillePersonne = 0.01;
 
 	/**
 	 * Constructor of the Gameworld
@@ -32,13 +33,14 @@ public class GameWorld {
 	public GameWorld() {
 		entites = new LinkedList<Entite>();
 		lSortie = new LinkedList<Sortie>();
-		Batiment2();
+		Batiment1();
 		for (Entite e : entites) {
 			if (e instanceof Sortie) {
 				System.out.println("+1");
 				lSortie.add((Sortie) e);
 			}
 		}
+		this.spawnPersonne(250);
 		AnalyseBatiment();
 
 	}
@@ -456,5 +458,14 @@ public class GameWorld {
 
 	public void setGameIsOk(boolean gameIsOk) {
 		this.gameIsOk = gameIsOk;
+	}
+	public void spawnPersonne(int n) {
+		for(int i=0; i<=n; i++) {
+			double x = Math.random();
+			double y =Math.random();
+			Personne nouvelle=new Personne(x,y,0.01);
+			
+			this.entites.add(nouvelle);
+		}
 	}
 }

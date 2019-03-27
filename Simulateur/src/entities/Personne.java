@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.LinkedList;
+
 import java.util.List;
 
 import Base.Entite;
@@ -13,10 +14,10 @@ public class Personne extends Entite {
 	private Position vecteurSortie;
 	private double vitesse = 0.00325;
 	private double Norme = 0;
-	private double hitRadius;
+	private double hitRadius=0.01;
 	private List<Personne> àProximité = new LinkedList<Personne>();
 	private int nbStep;
-	private double proximityRadius = 0.025;
+	private double proximityRadius = hitRadius*2.5;
 
 	public int getNbStep() {
 		return nbStep;
