@@ -16,7 +16,7 @@ import entities.piece;
  * The class GameWorld that handle the flow of the game
  * 
  * @author hugom
- *
+ * 
  */
 public class GameWorld {
 	private char derniereTouche;
@@ -24,6 +24,17 @@ public class GameWorld {
 	private List<Sortie> lSortie;
 	private static List<Entite> entites;
 	private List<piece> lPiece = new LinkedList<piece>();
+	private List<Personne> listPersonne = new LinkedList<Personne>();
+	private double taillePersonne = 0.01;
+	private Boolean pausePlay =false;
+
+	public Boolean getPausePlay() {
+		return pausePlay;
+	}
+
+	public void setPausePlay(Boolean pausePlay) {
+		this.pausePlay = pausePlay;
+	}
 
 	/**
 	 * Constructor of the Gameworld
@@ -38,14 +49,15 @@ public class GameWorld {
 				lSortie.add((Sortie) e);
 			}
 		}
+		//this.spawnPersonne(250);
 		AnalyseBatiment();
-
 	}
 
 	/**
 	 * Gestion des interactions clavier avec l'utilisateur
 	 * 
-	 * @param key Touche pressee par l'utilisateur
+	 * @param key
+	 *            Touche pressee par l'utilisateur
 	 */
 	public void processUserInput(char key) {
 		switch (key) {
@@ -66,7 +78,8 @@ public class GameWorld {
 			break;
 		case 'i':
 			derniereTouche = 'i';
-			// TODO
+			System.out.println("play/pause");
+			this.setPausePlay(!this.pausePlay);
 			break;
 		case 's':
 			derniereTouche = 's';
@@ -77,11 +90,12 @@ public class GameWorld {
 	}
 
 	/**
-	 * Gestion des interactions souris avec l'utilisateur (la souris a Ã©tÃ©
-	 * cliquÃ©e)
+	 * Gestion des interactions souris avec l'utilisateur (la souris a Ã©tÃ© cliquÃ©e)
 	 * 
-	 * @param x position en x de la souris au moment du clic
-	 * @param y position en y de la souris au moment du clic
+	 * @param x
+	 *            position en x de la souris au moment du clic
+	 * @param y
+	 *            position en y de la souris au moment du clic
 	 */
 	public void processMouseClick(double x, double y) {
 		switch (derniereTouche) {
@@ -90,10 +104,10 @@ public class GameWorld {
 			derniereTouche = '?';
 			break;
 		case 'p':
-			Personne p = new Personne(x, y, 0.01);
+			Personne p = new Personne(x, y, taillePersonne);
 			entites.add(p);
 			p.setSortieLaPlusProche(trouveSortieLaPlusProche(p));
-
+			listPersonne.add(p);
 			derniereTouche = '?';
 			break;
 		}
@@ -103,35 +117,62 @@ public class GameWorld {
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
+		System.out.println(listPersonne.size());
 		faitDesTruc();
 		for (Entite entite : GameWorld.entites) {
+			if (entite instanceof Personne) {
+				((Personne) entite).setNbStep(((Personne) entite).getNbStep() + 1);
+				if (((Personne) entite).getNbStep() % 1 == 0) {
+					aProximitedunePersonne((Personne) entite);
+				}
+			}
 			entite.step();
 		}
+	}
+
+	public double getTaillePersonne() {
+		return taillePersonne;
+	}
+
+	public void setTaillePersonne(double taillePersonne) {
+		this.taillePersonne = taillePersonne;
 	}
 
 	/**
 	 * Draw all entities and elements of the game
 	 */
 	public void Batiment1() {
-		// murs contour bâtiment
+		// murs contour bï¿½timent
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
-		entites.add(new Mur(0.2375, 0.995, 0.2375, 0.005));
-		entites.add(new Mur(0.7625, 0.995, 0.2375, 0.005));
-		entites.add(new Sortie(0.5, 0.995, 0.025, 0.005));
-		entites.add(new Sortie(0.7, 0.005, 0.025, 0.005));
+		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
+		entites.add(new Sortie(0.7, 0.995, 0.025, 0.005));
+		entites.add(new Sortie(0.995, 0.2, 0.005, 0.025));
 		// mur additionnels
-		entites.add(new Mur(0.2, 0.3, 0.2, 0.005));
-		entites.add(new Mur(0.8, 0.6, 0.005, 0.4));
-		entites.add(new Mur(0.3, 0.6, 0.3, 0.005));
-		entites.add(new Mur(0.5, 0.05, 0.005, 0.05));
-		entites.add(new Mur(0.3, 0.85, 0.005, 0.15));
+		entites.add(new Mur(0.3, 0.3, 0.3, 0.005));
+		entites.add(new Mur(0.8, 0.8, 0.2, 0.005));
+		entites.add(new Mur(0.4, 0.6, 0.4, 0.005));
+		entites.add(new Mur(0.15, 0.7, 0.15, 0.005));
+		//entites.add(new Mur(0.15, 0.9, 0.15, 0.005));
+		entites.add(new Mur(0.6, 0.1, 0.005, 0.1));
+		entites.add(new Mur(0.5, 0.85, 0.005, 0.15));
 		// colonnes
-//		entites.add(new Colonne(0.5, 0.8));
+		// entites.add(new Colonne(0.5, 0.8));
+	}
+
+	public void Batiment2() {
+		this.setTaillePersonne(0.05);
+		// murs contour bï¿½timent
+		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
+		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
+		entites.add(new Mur(0.5, 0.995, 0.5, 0.005));
+		entites.add(new Sortie(0.6, 0.995, 0.025, 0.005));
+		
 	}
 	
-	public void Batiment2() {
+	public void Batiment3() {
 		// murs contour bâtiment
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
@@ -152,7 +193,7 @@ public class GameWorld {
 		entites.add(new Mur(0.8, 0.95, 0.005, 0.05));
 		
 	}
-	public void Batiment3() {
+	public void Batiment4() {
 		// murs contour bâtiment
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
@@ -340,6 +381,7 @@ public class GameWorld {
 		for (piece s : lSupprime) {
 			lPiece.remove(s);
 		}
+		lSupprime.clear();
 		for (piece p : lPiece) {
 			for (Sortie s : ls) {
 				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
@@ -349,6 +391,17 @@ public class GameWorld {
 				if (posApartientPiece(new Position(s.getX(), s.getY()), p))
 					p.getSortie().add(s);
 			}
+			List<Sortie> sortiesupp = new LinkedList<Sortie>();
+			for (Sortie s :p.getSortie()) {
+				if (s.getX()>p.getX()-p.getTaillex()+0.05 && s.getX()<p.getX()+p.getTaillex()-0.05 && s.getY()>p.getY()-p.getTailley()+0.05 && s.getY()<p.getY()+p.getTailley()-0.05)
+					sortiesupp.add(s);
+			}
+			for (Sortie s: sortiesupp) {
+				p.getSortie().remove(s);
+			}
+			sortiesupp =new LinkedList<Sortie>();
+			
+			
 			double distanceSortie = -1;
 			System.out.println(p.getSortie().size());
 			Sortie vraiSortie = null;
@@ -371,15 +424,15 @@ public class GameWorld {
 				&& pos.getY() > p.getY() - p.getTailley() - 0.005 && pos.getY() < p.getY() + p.getTailley() + 0.005);
 
 	}
-//	public void AjoutePersonne(int n) {
-//		for (int i=0; i<n; i++) {
-//			entite.add(Personne())
-//		}
-//	}
+	// public void AjoutePersonne(int n) {
+	// for (int i=0; i<n; i++) {
+	// entite.add(Personne())
+	// }
+	// }
 
 	/*
 	 * faitDesTruc est une fonction qui repertorie toute les sortie d'un batiment
-	 * faitDesTruc supprime également les peronne qui ont passé la porte de sortie
+	 * faitDesTruc supprime ï¿½galement les peronne qui ont passï¿½ la porte de sortie
 	 * du batiment
 	 */
 	public void faitDesTruc() {
@@ -388,17 +441,20 @@ public class GameWorld {
 			if (entite instanceof Sortie) {
 				for (Entite entite2 : entites) {
 					if (entite2 instanceof Personne) {
-						if (entite2.getX() < entite.getX()+((Sortie)entite).getLongueurHori() && entite2.getX() > entite.getX()-((Sortie)entite).getLongueurHori() &&
-								entite2.getY() < entite.getY()+((Sortie)entite).getLongueurVert()+0.005 && entite2.getY() > entite.getY()-((Sortie)entite).getLongueurVert()-0.005)
+						if (entite2.getX() < entite.getX() + ((Sortie) entite).getLongueurHori()
+								&& entite2.getX() > entite.getX() - ((Sortie) entite).getLongueurHori()
+								&& entite2.getY() < entite.getY() + ((Sortie) entite).getLongueurVert() + 0.005
+								&& entite2.getY() > entite.getY() - ((Sortie) entite).getLongueurVert() - 0.005)
 							supp.add(entite2);
 					}
 				}
 			}
 			if (entite instanceof Personne) {
 				((Personne) entite).setSortieLaPlusProche(trouveSortiePiece(((Personne) entite)));
+
 			}
 		}
-		for(Entite e : supp) {
+		for (Entite e : supp) {
 			entites.remove(e);
 		}
 	}
@@ -422,6 +478,31 @@ public class GameWorld {
 		return result;
 	}
 
+	public void aProximitedunePersonne(Personne p) {
+		if (p.getaProximite() != null) {
+			p.setaProximite(new LinkedList<Personne>());
+
+		}
+		if (this.listPersonne != null) {
+			for (Entite c : this.entites) {
+				if (c instanceof Personne && c != p) {
+					double a = Math.abs(p.getX() - c.getX());
+					double b = Math.abs(p.getY() - c.getY());
+					double d = Math.sqrt(a * a + b * b);
+					// System.out.println(d);
+					// System.out.println(p.getProximityRadius());
+					if (d <= p.getProximityRadius()) {
+						// System.out.println(d);
+						// System.out.println("salope");
+						p.aProximiteAdd((Personne) c);
+					}
+					p.aProximiteRemove((Personne) c);
+				}
+			}
+		}
+
+	}
+
 	public Position trouveSortieLaPlusProche(Personne p) {
 		double x = p.getX();
 		double y = p.getY();
@@ -443,9 +524,9 @@ public class GameWorld {
 			entite.dessine();
 		}
 		// a supprimer TESTS
-//		for (piece p : lPiece) {
-//			p.dessine();
-//		}
+		// for (piece p : lPiece) {
+		// p.dessine();
+		// }
 	}
 
 	public boolean isGameIsOk() {
@@ -454,5 +535,14 @@ public class GameWorld {
 
 	public void setGameIsOk(boolean gameIsOk) {
 		this.gameIsOk = gameIsOk;
+	}
+	public void spawnPersonne(int n) {
+		for(int i=0; i<=n; i++) {
+			double x = Math.random();
+			double y =Math.random();
+			Personne nouvelle=new Personne(x,y,0.01);
+			
+			this.entites.add(nouvelle);
+		}
 	}
 }

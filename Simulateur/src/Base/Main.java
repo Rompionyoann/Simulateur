@@ -3,15 +3,20 @@ package Base;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		GameWorld world = new GameWorld();
+		Fenetre fenetre= new Fenetre(world);
 		// reglage de la taille de la fenetre de jeu, en pixels (nb: un écran fullHD =
 		// 1980x1050 pixels)
-		StdDraw.setCanvasSize(600, 600);
-
-		GameWorld world = new GameWorld();
+		
+		//if(world.isGameCanStart()) {
+		StdDraw.setCanvasSize(600,600);
+		
 
 		// permet le double buffering, pour type filter textpermettre l'animation
 		StdDraw.enableDoubleBuffering();
-
+		
+		
 		// la boucle principale de notre jeu
 		while (world.isGameIsOk()) {
 			// Efface la fenetre graphique
@@ -26,7 +31,8 @@ public class Main {
 			if (StdDraw.isMousePressed()) {
 				world.processMouseClick(StdDraw.mouseX(), StdDraw.mouseY());
 			}
-
+			
+			if(world.getPausePlay() || fenetre.getCommencer())
 			world.step();
 
 			// dessine la carte
@@ -36,7 +42,8 @@ public class Main {
 			StdDraw.show();
 			StdDraw.pause(20);
 
-		}
+		//}
+	}
+	}
 	}
 
-}
