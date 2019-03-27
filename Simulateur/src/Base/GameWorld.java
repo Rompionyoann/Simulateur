@@ -114,7 +114,7 @@ public class GameWorld {
 			if (entite instanceof Personne) {
 				((Personne) entite).setNbStep(((Personne) entite).getNbStep() + 1);
 				if (((Personne) entite).getNbStep() % 1 == 0) {
-					àProximitédunePersonne((Personne) entite);
+					aProximitedunePersonne((Personne) entite);
 				}
 			}
 			entite.step();
@@ -426,9 +426,9 @@ public class GameWorld {
 		return result;
 	}
 
-	public void àProximitédunePersonne(Personne p) {
-		if (p.getàProximité() != null) {
-			p.setàProximité(new LinkedList<Personne>());
+	public void aProximitedunePersonne(Personne p) {
+		if (p.getaProximite() != null) {
+			p.setaProximite(new LinkedList<Personne>());
 
 		}
 		if (this.listPersonne != null) {
@@ -442,9 +442,9 @@ public class GameWorld {
 					if (d <= p.getProximityRadius()) {
 						// System.out.println(d);
 						// System.out.println("salope");
-						p.àProximitéAdd((Personne) c);
+						p.aProximiteAdd((Personne) c);
 					}
-					p.àProximitéRemove((Personne) c);
+					p.aProximiteRemove((Personne) c);
 				}
 			}
 		}
