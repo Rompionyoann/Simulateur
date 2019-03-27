@@ -31,7 +31,8 @@ public class Main {
 			if (StdDraw.isMousePressed()) {
 				world.processMouseClick(StdDraw.mouseX(), StdDraw.mouseY());
 			}
-
+			
+			if(world.getPausePlay())
 			world.step();
 
 			// dessine la carte

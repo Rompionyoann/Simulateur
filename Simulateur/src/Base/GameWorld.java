@@ -26,6 +26,15 @@ public class GameWorld {
 	private List<piece> lPiece = new LinkedList<piece>();
 	private List<Personne> listPersonne = new LinkedList<Personne>();
 	private double taillePersonne = 0.01;
+	private Boolean pausePlay =false;
+
+	public Boolean getPausePlay() {
+		return pausePlay;
+	}
+
+	public void setPausePlay(Boolean pausePlay) {
+		this.pausePlay = pausePlay;
+	}
 
 	/**
 	 * Constructor of the Gameworld
@@ -42,7 +51,6 @@ public class GameWorld {
 		}
 		this.spawnPersonne(250);
 		AnalyseBatiment();
-
 	}
 
 	/**
@@ -70,7 +78,8 @@ public class GameWorld {
 			break;
 		case 'i':
 			derniereTouche = 'i';
-			// TODO
+			System.out.println("play/pause");
+			this.setPausePlay(!this.pausePlay);
 			break;
 		case 's':
 			derniereTouche = 's';
