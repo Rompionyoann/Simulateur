@@ -5,7 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import entities.Colonne;
 import entities.Mur;
 import entities.Personne;
@@ -27,6 +28,17 @@ public class GameWorld {
 	private List<Personne> listPersonne = new LinkedList<Personne>();
 	private double taillePersonne = 0.01;
 	private Boolean pausePlay =false;
+	private Instant debut;
+	private long timer;
+	private Boolean over=true;
+	
+	public long getTimer() {
+		return timer;
+	}
+
+	public void setTimer(long timer) {
+		this.timer = timer;
+	}
 
 	public Boolean getPausePlay() {
 		return pausePlay;
@@ -80,6 +92,7 @@ public class GameWorld {
 			derniereTouche = 'i';
 			System.out.println("play/pause");
 			this.setPausePlay(!this.pausePlay);
+			this.setDebut(Instant.now());
 			break;
 		case 's':
 			derniereTouche = 's';
@@ -87,6 +100,14 @@ public class GameWorld {
 		default:
 			break;
 		}
+	}
+
+	public Instant getDebut() {
+		return debut;
+	}
+
+	public void setDebut(Instant debut) {
+		this.debut = debut;
 	}
 
 	/**
@@ -117,7 +138,7 @@ public class GameWorld {
 	 * Action for all the entities and elements of the game
 	 */
 	public void step() {
-		System.out.println(listPersonne.size());
+		//System.out.println(listPersonne.size());
 		faitDesTruc();
 		for (Entite entite : GameWorld.entites) {
 			if (entite instanceof Personne) {
@@ -128,6 +149,20 @@ public class GameWorld {
 			}
 			entite.step();
 		}
+		
+		if(over && this.gameIsOver()) {
+			this.setTimer((Instant.now().minus(debut.toEpochMilli(),  ChronoUnit.MILLIS)).toEpochMilli());
+			System.out.println(timer);
+			over = false;
+		}
+	}
+
+	public Boolean getOver() {
+		return over;
+	}
+
+	public void setOver(Boolean over) {
+		this.over = over;
 	}
 
 	public double getTaillePersonne() {
@@ -173,7 +208,7 @@ public class GameWorld {
 	}
 	
 	public void Batiment3() {
-		// murs contour bâtiment
+		// murs contour bï¿½timent
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
@@ -194,7 +229,7 @@ public class GameWorld {
 		
 	}
 	public void Batiment4() {
-		// murs contour bâtiment
+		// murs contour bï¿½timent
 		entites.add(new Mur(0.005, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.995, 0.5, 0.005, 0.5));
 		entites.add(new Mur(0.5, 0.005, 0.5, 0.005));
@@ -456,6 +491,7 @@ public class GameWorld {
 		}
 		for (Entite e : supp) {
 			entites.remove(e);
+			listPersonne.remove((Personne)e);
 		}
 	}
 
@@ -545,4 +581,24 @@ public class GameWorld {
 			this.entites.add(nouvelle);
 		}
 	}
+	public void clearAllPersonne() {
+		for(Entite e:this.entites) {
+			if(e instanceof Personne) {
+				this.entites.remove(e);
+			}
+		}
+	}
+	public Boolean gameIsOver() {
+		Boolean ilrestedumonde=false;
+		for(Entite e:this.entites) {
+			if(e instanceof Personne)
+				ilrestedumonde=true;
+		}
+		if(!ilrestedumonde) {
+			System.out.println("pute");
+			return true;
+		}else {
+			return false;
+		}
+		}
 }

@@ -28,11 +28,11 @@ public class Fenetre extends JFrame{
 		this.world=world;
 	}
 	private void build(){
-		setTitle("PAramètrage du Simulateur"); //On donne un titre à l'application
-		setSize(500,200); //On donne une taille à notre fenêtre
-		setLocationRelativeTo(null); //On centre la fenêtre sur l'écran
+		setTitle("PAramï¿½trage du Simulateur"); //On donne un titre ï¿½ l'application
+		setSize(500,200); //On donne une taille ï¿½ notre fenï¿½tre
+		setLocationRelativeTo(null); //On centre la fenï¿½tre sur l'ï¿½cran
 		setResizable(true); //On permet le redimensionnement
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //On dit à l'application de se fermer lors du clic sur la croix
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //On dit ï¿½ l'application de se fermer lors du clic sur la croix
 		setContentPane(buildContentPane());
 		this.setVisible(true);
 	}
@@ -52,9 +52,10 @@ public class Fenetre extends JFrame{
 		panel.add(textField);
 		
 		JButton bouton = new JButton(new GetAction(this, "Commencer !"));
- 
+		
 		panel.add(bouton);
- 
+		JButton bouton1 = new JButton(new getAction1(this," Nettoyer"));
+		panel.add(bouton1);
 		return panel;
 	}
 	public JTextField getTextField() {
@@ -86,5 +87,18 @@ class GetAction extends AbstractAction {
 		int b = fenetre.TextFieldtoInt();
 		if(b!=-1)
 		this.fenetre.world.spawnPersonne(b);
+	} 	
+}
+class getAction1 extends AbstractAction{
+	private Fenetre fenetre;
+	 
+	public getAction1(Fenetre fenetre, String texte){
+		super(texte);
+ 
+		this.fenetre = fenetre;
+	}
+ 
+	public void actionPerformed(ActionEvent e) {
+		fenetre.world.clearAllPersonne();
 	} 	
 }
