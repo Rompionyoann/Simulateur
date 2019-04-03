@@ -57,7 +57,7 @@ public class GameWorld {
 		Batiment1();
 		for (Entite e : entites) {
 			if (e instanceof Sortie) {
-				System.out.println("+1");
+				
 				lSortie.add((Sortie) e);
 			}
 		}
@@ -385,7 +385,7 @@ public class GameWorld {
 						&& (p1.getY() - p1.getTailley() != p2.getY() - p2.getTailley())) {
 					double hauteur = (p2.getY() + p2.getTailley()) - (p1.getY() - p1.getTailley());
 					double yp3 = ((p2.getY() + p2.getTailley()) + (p1.getY() - p1.getTailley())) / 2;
-					System.out.println(yp3);
+					
 					piece p3 = new piece(p1.getX(), yp3, p1.getTaillex(), hauteur / 2);
 					lAjoute.add(p3);
 					lSupprime.add(p1);
@@ -438,7 +438,7 @@ public class GameWorld {
 			
 			
 			double distanceSortie = -1;
-			System.out.println(p.getSortie().size());
+			
 			Sortie vraiSortie = null;
 			for (Sortie s : p.getSortie()) {
 				for (Sortie p2 : lSortie) {
@@ -529,7 +529,7 @@ public class GameWorld {
 					// System.out.println(p.getProximityRadius());
 					if (d <= p.getProximityRadius()) {
 						// System.out.println(d);
-						// System.out.println("salope");
+						
 						p.aProximiteAdd((Personne) c);
 					}
 					p.aProximiteRemove((Personne) c);
@@ -582,12 +582,10 @@ public class GameWorld {
 		}
 	}
 	public void clearAllPersonne() {
-		for(Entite e:this.entites) {
-			if(e instanceof Personne) {
-				this.entites.remove(e);
-			}
+		this.listPersonne.clear();
+			
 		}
-	}
+	
 	public Boolean gameIsOver() {
 		Boolean ilrestedumonde=false;
 		for(Entite e:this.entites) {
@@ -595,7 +593,7 @@ public class GameWorld {
 				ilrestedumonde=true;
 		}
 		if(!ilrestedumonde) {
-			System.out.println("pute");
+			
 			return true;
 		}else {
 			return false;

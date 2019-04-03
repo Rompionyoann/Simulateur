@@ -28,7 +28,7 @@ public class Fenetre extends JFrame{
 		this.world=world;
 	}
 	private void build(){
-		setTitle("PAramï¿½trage du Simulateur"); //On donne un titre ï¿½ l'application
+		setTitle("Paramétrage du Simulateur"); //On donne un titre ï¿½ l'application
 		setSize(500,200); //On donne une taille ï¿½ notre fenï¿½tre
 		setLocationRelativeTo(null); //On centre la fenï¿½tre sur l'ï¿½cran
 		setResizable(true); //On permet le redimensionnement
@@ -52,10 +52,11 @@ public class Fenetre extends JFrame{
 		panel.add(textField);
 		
 		JButton bouton = new JButton(new GetAction(this, "Commencer !"));
-		
 		panel.add(bouton);
 		JButton bouton1 = new JButton(new getAction1(this," Nettoyer"));
 		panel.add(bouton1);
+		
+		
 		return panel;
 	}
 	public JTextField getTextField() {
@@ -71,6 +72,7 @@ public class Fenetre extends JFrame{
 		}
 		return -1;
 	}
+	
 }
 
 class GetAction extends AbstractAction {
@@ -83,7 +85,7 @@ class GetAction extends AbstractAction {
 	}
  
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("la joie de vivre");
+
 		int b = fenetre.TextFieldtoInt();
 		if(b!=-1)
 		this.fenetre.world.spawnPersonne(b);
@@ -99,6 +101,8 @@ class getAction1 extends AbstractAction{
 	}
  
 	public void actionPerformed(ActionEvent e) {
+		fenetre.world.setPausePlay(false);
 		fenetre.world.clearAllPersonne();
+		
 	} 	
 }

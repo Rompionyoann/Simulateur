@@ -34,7 +34,7 @@ public class Main {
 			
 			if(world.getPausePlay() || fenetre.getCommencer())
 			world.step();
-
+		
 			// dessine la carte
 			world.dessine();
 

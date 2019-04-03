@@ -162,10 +162,7 @@ public class Personne extends Entite {
 				this.getY() + (this.getProximityRadius() * (vecteurSortie.getY() / Norme)));
 		double b = Math.sqrt(Math.pow((p.getX() - C.getX()), 2) + Math.pow(p.getY() - C.getY(), 2));
 		double h = Math.sqrt(Math.abs(((Math.pow(c, 2)) - Math.pow(((a * a - b * b + c * c) / (2 * a)), 2))));
-		System.out.println(C.getX() + " " + C.getY());
-		System.out.println(h);
-		System.out.println(h <= this.hitRadius);
-		System.out.println(Math.atan(h / c));
+		
 		double valP = Math.sqrt(Math.pow(p.getX()-sortieLaPlusProche.getX(),2)+Math.pow(p.getY()-sortieLaPlusProche.getY(),2));
 		double valThis = Math.sqrt(Math.pow(this.getX()-sortieLaPlusProche.getX(),2)+Math.pow(this.getY()-sortieLaPlusProche.getY(),2));
 		
