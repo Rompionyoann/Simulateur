@@ -2,6 +2,7 @@ package Base;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import java.awt.FlowLayout;
@@ -15,6 +16,8 @@ public class Fenetre extends JFrame{
 	private JTextField textField;
 	private Boolean Commencer=false;
 	 GameWorld world;
+	 private JTextArea textArea;
+	 
 	
 	public Boolean getCommencer() {
 		return Commencer;
@@ -51,13 +54,27 @@ public class Fenetre extends JFrame{
 		panel.add(label);
 		panel.add(textField);
 		
+		
 		JButton bouton = new JButton(new GetAction(this, "Commencer !"));
 		panel.add(bouton);
-		JButton bouton1 = new JButton(new getAction1(this," Nettoyer"));
-		panel.add(bouton1);
+		//JButton bouton1 = new JButton(new getAction1(this," Nettoyer"));
+		//panel.add(bouton1);
 		
 		
+		JLabel label2 =new JLabel("Temps de la simulation (en s)");
+		panel.add(label2);
+		
+		textArea= new JTextArea();
+		textArea.setColumns(15);
+		textArea.setEditable(false);
+		panel.add(textArea);
 		return panel;
+	}
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+	public JTextArea getTextArea() {
+		return textArea;
 	}
 	public JTextField getTextField() {
 		return textField;

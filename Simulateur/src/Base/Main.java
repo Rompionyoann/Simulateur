@@ -1,5 +1,7 @@
 package Base;
 
+import javax.swing.JTextArea;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -35,6 +37,11 @@ public class Main {
 			if(world.getPausePlay() || fenetre.getCommencer())
 			world.step();
 		
+			if(!world.getOver()) {
+				JTextArea a = fenetre.getTextArea();
+				a.setText(""+world.getTimer()*Math.pow(10, -3));
+				fenetre.setTextArea(a);
+			}
 			// dessine la carte
 			world.dessine();
 
